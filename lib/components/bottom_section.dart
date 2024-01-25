@@ -1,6 +1,7 @@
 import 'package:fe_interview_task_1/components/avatar.dart';
 import 'package:fe_interview_task_1/components/option_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MyBottomSection extends StatelessWidget {
   MyBottomSection({super.key});
@@ -108,6 +109,34 @@ class MyBottomSection extends StatelessWidget {
               )
             ],
           ),
+          const SizedBox(
+            height: 21,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                width: 15,
+              ),
+              const Text(
+                'Pick your option.\nSee who has a similar mind.',
+                style: TextStyle(
+                  fontFamily: 'ProximaNova',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12,
+                  color: Color.fromRGBO(203, 201, 255, 0.70),
+                ),
+              ),
+              const SizedBox(
+                width: 100,
+              ),
+              SvgPicture.asset('lib/assets/arrow.svg'),
+              const SizedBox(
+                width: 6,
+              ),
+              SvgPicture.asset('lib/assets/mike.svg'),
+            ],
+          )
         ],
       ),
     ]);
