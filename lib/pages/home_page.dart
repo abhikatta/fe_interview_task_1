@@ -1,5 +1,5 @@
+import 'package:fe_interview_task_1/components/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatelessWidget {
@@ -9,7 +9,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      // appBar: AppBar(title: const Text('Stroll Bonfire')),
+      bottomNavigationBar: Container(
+        height: 45,
+        padding: const EdgeInsets.only(left: 14, right: 14),
+        decoration: const BoxDecoration(
+          color: Color(0xFF0F1115),
+        ),
+        child: const MyBottomNavBar(),
+      ),
       body: Stack(
         fit: StackFit.expand,
         children: [
