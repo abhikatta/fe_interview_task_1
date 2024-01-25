@@ -98,8 +98,8 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ])),
-          const Positioned(
-            bottom: 100,
+          Positioned(
+            bottom: 10,
             left: 0,
             right: 0,
             child: MyBottomSection(),
