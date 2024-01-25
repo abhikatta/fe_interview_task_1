@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 
 class MyOptionComponent extends StatelessWidget {
-  final String text;
+  final String option;
+  final String choice;
   final VoidCallback onPressed;
   final bool selected;
   const MyOptionComponent(
       {Key? key,
-      required this.text,
+      required this.choice,
+      required this.option,
       required this.onPressed,
       required this.selected})
       : super(key: key);
@@ -23,7 +25,7 @@ class MyOptionComponent extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             decoration: BoxDecoration(
               border: Border.all(
-                  width: selected ? 2 : 0,
+                  width: 2,
                   color: selected ? Color(0xFF8B88EF) : Colors.transparent),
               borderRadius: BorderRadius.circular(12),
               color: Color(0xFF232A2E),
@@ -49,12 +51,13 @@ class MyOptionComponent extends StatelessWidget {
               ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   width: 20,
                   height: 20,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
                     border: Border.all(
                         width: 1,
@@ -66,9 +69,11 @@ class MyOptionComponent extends StatelessWidget {
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    'A',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12, color: Color(0xFFC4C4C4)),
+                    option,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'ProximaNova',
+                        color: Color(0xFFC4C4C4)),
                   ),
                 ),
                 SizedBox(
@@ -76,12 +81,12 @@ class MyOptionComponent extends StatelessWidget {
                 ),
                 Flexible(
                     child: Text(
-                  text,
+                  choice,
                   style: TextStyle(
                       color: Color(0xFFC4C4C4),
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
-                      height: 1.05),
+                      height: 1.1),
                 )),
               ],
             )));

@@ -10,12 +10,13 @@ class MyBottomSection extends StatelessWidget {
   final String question = 'What is your favorite time of the day?';
   final String quote = '“Mine is definitely the peace in the morning.”';
 
-  final List<String> options = [
+  final List<String> choices = [
     'The peace in the early mornings',
     'The magical golden hours',
     'Wind-down time after dinners',
     'The serenity past midnight'
   ];
+  final List<String> options = ['A', 'B', 'C', 'D'];
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -74,7 +75,8 @@ class MyBottomSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               MyOptionComponent(
-                text: options[0],
+                choice: choices[0],
+                option: options[0],
                 onPressed: () {},
                 selected: false,
               ),
@@ -82,7 +84,8 @@ class MyBottomSection extends StatelessWidget {
                 width: 12,
               ),
               MyOptionComponent(
-                text: options[1],
+                choice: choices[1],
+                option: options[1],
                 onPressed: () {},
                 selected: false,
               )
@@ -95,7 +98,8 @@ class MyBottomSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               MyOptionComponent(
-                text: options[2],
+                choice: choices[2],
+                option: options[2],
                 onPressed: () {},
                 selected: false,
               ),
@@ -103,7 +107,8 @@ class MyBottomSection extends StatelessWidget {
                 width: 12,
               ),
               MyOptionComponent(
-                text: options[3],
+                choice: choices[3],
+                option: options[3],
                 onPressed: () {},
                 selected: true,
               )

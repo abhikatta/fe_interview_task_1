@@ -6,6 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  final String time = '22h 00m';
+  final num peopleCount = 103;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -21,9 +24,12 @@ class HomePage extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          const Text('Stroll Bonfire'),
           Image.asset(
             'lib/assets/background.png',
+            fit: BoxFit.cover,
+          ),
+          SvgPicture.asset(
+            'lib/assets/fade.svg',
             fit: BoxFit.cover,
           ),
           Center(
@@ -73,9 +79,9 @@ class HomePage extends StatelessWidget {
                   height: 15.0,
                 ),
                 const SizedBox(width: 3.27),
-                const Text(
-                  '22h 00m',
-                  style: TextStyle(
+                Text(
+                  time,
+                  style: const TextStyle(
                       fontFamily: 'Proxima Nova',
                       fontSize: 12,
                       color: Colors.white,
@@ -87,9 +93,9 @@ class HomePage extends StatelessWidget {
                   width: 10.0,
                   height: 13.0,
                 ),
-                const Text(
-                  '103',
-                  style: TextStyle(
+                Text(
+                  peopleCount.toString(),
+                  style: const TextStyle(
                       fontFamily: 'Proxima Nova',
                       fontSize: 12,
                       color: Colors.white,
