@@ -99,7 +99,7 @@ class HomePage extends StatelessWidget {
             ),
           ])),
           Positioned(
-            bottom: 10,
+            bottom: 00,
             left: 0,
             right: 0,
             child: MyBottomSection(),

@@ -139,6 +139,9 @@ class MyBottomSection extends StatelessWidget {
           )
         ],
       ),
+      const SizedBox(
+        height: 10,
+      )
     ]);
   }
 }
