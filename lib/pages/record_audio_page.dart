@@ -1,3 +1,4 @@
+import 'package:fe_interview_task_1/components/my_audio_recorder.dart';
 import 'package:fe_interview_task_1/components/my_status_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -42,6 +43,9 @@ class AudioRecordingPage extends StatelessWidget {
             name: "Angelina",
             age: 28,
           ),
+          MyAudioRecorder(
+            key: key,
+          )
         ],
       ),
     ));
