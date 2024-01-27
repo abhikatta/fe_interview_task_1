@@ -19,8 +19,6 @@ class AudioRecordingPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10),
             ),
           ),
-          // ClipRect(
-          // child:
           Positioned(
             left: -39,
             width: 476,
@@ -28,10 +26,8 @@ class AudioRecordingPage extends StatelessWidget {
             child: Image.asset(
               'lib/assets/human.png',
               fit: BoxFit.fill,
-              // width: ,
             ),
           ),
-          // ),
           Positioned(
             top: 0,
             left: 0,
@@ -40,10 +36,8 @@ class AudioRecordingPage extends StatelessWidget {
             child: SvgPicture.asset(
               'lib/assets/record_fade_over.svg',
               fit: BoxFit.cover,
-              // height: 200,
             ),
           ),
-
           const MyStatusBar(
             name: "Angelina",
             age: 28,
