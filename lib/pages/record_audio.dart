@@ -1,9 +1,8 @@
+import 'package:fe_interview_task_1/components/my_status_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AudioRecordingPage extends StatelessWidget {
-  final String name = 'Angelina';
-  final num age = 28;
   const AudioRecordingPage({super.key});
 
   @override
@@ -45,23 +44,10 @@ class AudioRecordingPage extends StatelessWidget {
             ),
           ),
 
-          Positioned(
-              top: 10,
-              left: 0,
-              right: 0,
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                centerTitle: true,
-                title: Text(
-                  '$name, $age',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFFF5F5F5),
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'ProximaNova',
-                  ),
-                ),
-              ))
+          const MyStatusBar(
+            name: "Angelina",
+            age: 28,
+          ),
         ],
       ),
     ));
