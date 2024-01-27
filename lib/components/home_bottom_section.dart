@@ -1,6 +1,6 @@
 import 'package:fe_interview_task_1/components/avatar.dart';
 import 'package:fe_interview_task_1/components/option_component.dart';
-import 'package:fe_interview_task_1/pages/record_audio.dart';
+import 'package:fe_interview_task_1/pages/record_audio_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

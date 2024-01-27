@@ -1,5 +1,5 @@
 import 'package:fe_interview_task_1/components/bottom_nav_bar.dart';
-import 'package:fe_interview_task_1/components/bottom_section.dart';
+import 'package:fe_interview_task_1/components/home_bottom_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
