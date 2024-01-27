@@ -13,6 +13,7 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
   bool areDeleteSubmitButtonEnabled = false;
   String buttonState = 'start_record_button';
   bool isRecorded = false;
+  bool isUnmatched = true;
 
 /*
 all states: none, recording, recorded, playable, playing, 
@@ -53,18 +54,24 @@ if not playing : button state::isPausable=false
     setState(() {
       if (buttonState == 'start_record_button') {
         buttonState = 'stop_record_button';
+        isUnmatched = false;
       } else if (buttonState == 'stop_record_button') {
         isRecorded = true;
+        isUnmatched = true;
+
         areDeleteSubmitButtonEnabled = true;
         buttonState = 'play_button';
       } else if (buttonState == 'play_button' && isRecorded) {
         buttonState = 'pause_button';
+        isUnmatched = true;
       } else if (buttonState == 'pause_button' && isRecorded) {
         buttonState = 'play_button';
+        isUnmatched = true;
       } else if ((buttonState == 'play_button' ||
               buttonState == 'pause_button') &&
           !isRecorded) {
         buttonState = 'start_record_button';
+        isUnmatched = true;
       }
     });
   }
@@ -214,7 +221,7 @@ if not playing : button state::isPausable=false
           Text(
             'Unmatch',
             style: TextStyle(
-              color: areDeleteSubmitButtonEnabled == true
+              color: isUnmatched == true
                   ? const Color.fromRGBO(255, 41, 41, 1)
                   : const Color.fromRGBO(190, 32, 32, 1),
               fontSize: 13,
