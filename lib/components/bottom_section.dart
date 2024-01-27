@@ -1,5 +1,6 @@
 import 'package:fe_interview_task_1/components/avatar.dart';
 import 'package:fe_interview_task_1/components/option_component.dart';
+import 'package:fe_interview_task_1/pages/record_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -115,33 +116,47 @@ class MyBottomSection extends StatelessWidget {
             ],
           ),
           const SizedBox(
-            height: 21,
+            height: 14,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 15,
-              ),
-              const Text(
-                'Pick your option.\nSee who has a similar mind.',
-                style: TextStyle(
-                  fontFamily: 'ProximaNova',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12,
-                  color: Color.fromRGBO(203, 201, 255, 0.70),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Pick your option.\nSee who has a similar mind.',
+                  style: TextStyle(
+                    fontFamily: 'ProximaNova',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    color: Color.fromRGBO(203, 201, 255, 0.70),
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 100,
-              ),
-              SvgPicture.asset('lib/assets/arrow.svg'),
-              const SizedBox(
-                width: 6,
-              ),
-              SvgPicture.asset('lib/assets/mike.svg'),
-            ],
-          )
+                const SizedBox(
+                  width: 90,
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const AudioRecordingPage()));
+                      },
+                      child: SvgPicture.asset('lib/assets/mike.svg'),
+                    ),
+                    const SizedBox(width: 6),
+                    GestureDetector(
+                      onTap: () {},
+                      child: SvgPicture.asset('lib/assets/arrow.svg'),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
         ],
       ),
       const SizedBox(
