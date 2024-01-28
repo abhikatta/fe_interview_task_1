@@ -288,40 +288,45 @@ if not playing : button state::isPausable=false
             const SizedBox(
               height: 22,
             ),
-            Container(
-              height: 40,
-              child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (isUnmatched)
-                      Container(
-                        color: const Color.fromRGBO(54, 57, 62, 1),
-                        height: 2,
-                        width: MediaQuery.of(context).size.width - 20,
-                      ),
-                    if (!isUnmatched)
-                      for (var i in amplitudes)
-                        Row(
-                          children: [
-                            Container(
-                              width: 2,
-                              height: (i!.max - i.current) * -1 / 4,
-                              margin: const EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                color: !isRecorded
-                                    ? const Color.fromRGBO(54, 57, 62, 0.95)
-                                    : const Color.fromRGBO(191, 189, 255, 1),
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 1,
-                            ),
-                          ],
+            SizedBox(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (isUnmatched && !isRecorded)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 17),
+                          child: Container(
+                            color: const Color.fromRGBO(54, 57, 62, 1),
+                            height: 2,
+                            width: MediaQuery.of(context).size.width - 20,
+                          ),
                         ),
-                  ]),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (!isUnmatched || isRecorded)
+                            for (var i in amplitudes)
+                              Container(
+                                width: 2,
+                                height: (i!.max - i.current) * -1 / 4,
+                                margin:
+                                    const EdgeInsets.only(bottom: 10, right: 2),
+                                decoration: BoxDecoration(
+                                  color: !isRecorded
+                                      ? const Color.fromRGBO(54, 57, 62, 0.95)
+                                      : const Color.fromRGBO(191, 189, 255, 1),
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                              ),
+                        ],
+                      ),
+                    ]),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
