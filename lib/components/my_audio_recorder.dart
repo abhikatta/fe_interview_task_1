@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:async';
+
 import 'package:fe_interview_task_1/components/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,22 +18,49 @@ class MyAudioRecorder extends StatefulWidget {
 }
 
 class _MyAudioRecorderState extends State<MyAudioRecorder> {
-  bool areDeleteSubmitButtonEnabled = false;
-  String buttonState = 'start_record_button';
   bool isRecorded = false;
   bool isUnmatched = true;
   late String filePath = '';
   late AudioRecorder recorder = AudioRecorder();
   late AudioPlayer player = AudioPlayer();
+  // permissions:
   Permission microphonePermission = Permission.microphone;
   Permission mediaPermission = Permission.mediaLibrary;
   Permission storagePermission = Permission.storage;
+  // ui things:
+  bool areDeleteSubmitButtonEnabled = false;
+  String buttonState = 'start_record_button';
+  late StreamSubscription<Duration?> durationSubscription;
+  String totalDuration = "0:00";
+  List<Amplitude?> amplitudes = [];
 
   @override
   void initState() {
     super.initState();
     recorder = AudioRecorder();
     player = AudioPlayer();
+    initAudioPlayer();
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$twoDigitMinutes:$twoDigitSeconds';
+  }
+
+  Future<void> initAudioPlayer() async {
+    try {
+      durationSubscription = player.durationStream.listen((duration) {
+        if (duration != null) {
+          setState(() {
+            totalDuration = _formatDuration(duration);
+          });
+        }
+      });
+    } catch (e) {
+      print("Error initializing audio player: $e");
+    }
   }
 
   @override
@@ -50,7 +79,18 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
       filePath = '$tempDir/temp_recording.m4a';
 
       await recorder.start(const RecordConfig(), path: filePath);
-      // await recorder.getAmplitude();
+
+      Timer.periodic(const Duration(milliseconds: 450), (timer) async {
+        if (await recorder.isRecording()) {
+          Amplitude amplitude = await recorder.getAmplitude();
+
+          setState(() {
+            amplitudes.add(amplitude);
+          });
+        } else {
+          timer.cancel();
+        }
+      });
     } catch (e) {
       print(e);
 
@@ -61,7 +101,7 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
   Future<void> stopRecording() async {
     if (buttonState == 'stop_record_button') {
       try {
-        print(await recorder.stop());
+        await recorder.stop();
       } catch (e) {
         print(e);
       }
@@ -70,9 +110,9 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
 
   Future<void> playRecording() async {
     try {
+      await player.setLoopMode(LoopMode.one);
       await player.setFilePath(filePath);
       await player.play();
-      // await player.setFilePath(filePath, preload: false);
     } catch (e) {
       print('\n\nCould not play \n');
       print(e);
@@ -81,13 +121,15 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
   }
 
   Future<void> pauseRecording() async {
-    // await player.setAsset('lib/assets/music.mp3');
     await player.pause();
   }
 
   Future<void> deleteSubmitRecording() async {
     await player.stop();
-
+    await recorder.stop();
+    setState(() {
+      totalDuration = '00:00';
+    });
     print('Deleted recording');
   }
 
@@ -119,6 +161,9 @@ if not playing : button state::isPausable=false
         isRecorded = false;
         areDeleteSubmitButtonEnabled = false;
         deleteSubmitRecording();
+        setState(() {
+          amplitudes = [];
+        });
         if ((buttonState == 'play_button' || buttonState == 'pause_button') &&
             !isRecorded) {
           buttonState = 'start_record_button';
@@ -158,159 +203,191 @@ if not playing : button state::isPausable=false
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 2.76,
-                color: Colors.black,
-              ),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: const MyAvatar(imagePath: 'lib/assets/human.png'),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(999),
-              border: const Border.symmetric(
-                horizontal: BorderSide(
-                  width: 3.5,
+    return Positioned(
+        bottom: 20,
+        left: 0,
+        right: 0,
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2.76,
                   color: Colors.black,
                 ),
-                vertical: BorderSide(
-                  width: 3,
-                  color: Colors.black,
-                ),
+                borderRadius: BorderRadius.circular(999),
               ),
+              child: const MyAvatar(imagePath: 'lib/assets/human.png'),
             ),
-            child: const Text(
-              'Stroll Question',
-              style: TextStyle(
-                fontSize: 11,
-                backgroundColor: Colors.black,
-                color: Color(0xFFF5F5F5),
-                fontWeight: FontWeight.w700,
-                fontFamily: 'ProximaNova',
-              ),
-            ),
-          ),
-          Container(
-              alignment: Alignment.center,
-              child: const Column(children: [
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 55),
-                    child: Text(
-                      'What is your favorite time of the day?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Color(0xFFF5F5F5),
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'ProximaNova',
-                      ),
-                    )),
-                Text(
-                  '“Mine is definitely the peace in the morning.”',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Color.fromRGBO(203, 201, 255, 0.7),
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'ProximaNova',
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(999),
+                border: const Border.symmetric(
+                  horizontal: BorderSide(
+                    width: 3.5,
+                    color: Colors.black,
+                  ),
+                  vertical: BorderSide(
+                    width: 3,
+                    color: Colors.black,
                   ),
                 ),
-                Padding(
-                    padding: EdgeInsets.only(
-                      top: 34,
+              ),
+              child: const Text(
+                'Stroll Question',
+                style: TextStyle(
+                  fontSize: 11,
+                  backgroundColor: Colors.black,
+                  color: Color(0xFFF5F5F5),
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'ProximaNova',
+                ),
+              ),
+            ),
+            Container(
+                alignment: Alignment.center,
+                child: Column(children: [
+                  const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 55),
+                      child: Text(
+                        'What is your favorite time of the day?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Color(0xFFF5F5F5),
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'ProximaNova',
+                        ),
+                      )),
+                  const Text(
+                    '“Mine is definitely the peace in the morning.”',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color.fromRGBO(203, 201, 255, 0.7),
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'ProximaNova',
                     ),
-                    child: Text(
-                      '00:15 / 00:38',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Color.fromRGBO(245, 245, 245, 1),
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'ProximaNova',
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(
+                        top: 34,
                       ),
-                    )),
-
-                // temp:
-
-                //
-              ])),
-          const Text(
-            'Waveform here',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24,
-              color: Color(0xFFF5F5F5),
-              fontWeight: FontWeight.w700,
-              fontFamily: 'ProximaNova',
+                      child: Text(
+                        totalDuration,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Color.fromRGBO(245, 245, 245, 1),
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'ProximaNova',
+                        ),
+                      )),
+                ])),
+            const SizedBox(
+              height: 22,
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () async {
-                  submitDeletePressed();
-                },
-                child: Text(
-                  'Delete',
-                  style: TextStyle(
-                    color: areDeleteSubmitButtonEnabled == false
-                        ? const Color.fromRGBO(255, 255, 255, 0.3)
-                        : const Color.fromRGBO(255, 255, 255, 1),
-                    fontSize: 13,
-                    fontFamily: 'ProximaNova',
-                    fontWeight: FontWeight.w400,
+            SizedBox(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (isUnmatched && !isRecorded)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 17),
+                          child: Container(
+                            color: const Color.fromRGBO(54, 57, 62, 1),
+                            height: 2,
+                            width: MediaQuery.of(context).size.width - 20,
+                          ),
+                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (!isUnmatched || isRecorded)
+                            for (var i in amplitudes)
+                              Container(
+                                width: 2,
+                                height: (i!.max - i.current) * -1 / 4,
+                                margin:
+                                    const EdgeInsets.only(bottom: 10, right: 2),
+                                decoration: BoxDecoration(
+                                  color: !isRecorded
+                                      ? const Color.fromRGBO(54, 57, 62, 0.95)
+                                      : const Color.fromRGBO(191, 189, 255, 1),
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                              ),
+                        ],
+                      ),
+                    ]),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    submitDeletePressed();
+                  },
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(
+                      color: areDeleteSubmitButtonEnabled == false
+                          ? const Color.fromRGBO(255, 255, 255, 0.3)
+                          : const Color.fromRGBO(255, 255, 255, 1),
+                      fontSize: 13,
+                      fontFamily: 'ProximaNova',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 36),
-              IconButton(
-                onPressed: () {
-                  toggleButton();
-                },
-                icon: SvgPicture.asset('lib/assets/$buttonState.svg'),
-              ),
-              const SizedBox(width: 36),
-              TextButton(
-                onPressed: () {
-                  submitDeletePressed();
-                },
-                child: Text(
-                  'Submit',
-                  style: TextStyle(
-                    color: areDeleteSubmitButtonEnabled == false
-                        ? const Color.fromRGBO(255, 255, 255, 0.3)
-                        : const Color.fromRGBO(255, 255, 255, 1),
-                    fontSize: 13,
-                    fontFamily: 'ProximaNova',
-                    fontWeight: FontWeight.w400,
+                const SizedBox(width: 36),
+                IconButton(
+                  onPressed: () {
+                    toggleButton();
+                  },
+                  icon: SvgPicture.asset('lib/assets/$buttonState.svg'),
+                ),
+                const SizedBox(width: 36),
+                TextButton(
+                  onPressed: () {
+                    submitDeletePressed();
+                  },
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: areDeleteSubmitButtonEnabled == false
+                          ? const Color.fromRGBO(255, 255, 255, 0.3)
+                          : const Color.fromRGBO(255, 255, 255, 1),
+                      fontSize: 13,
+                      fontFamily: 'ProximaNova',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Text(
-            'Unmatch',
-            style: TextStyle(
-              color: isUnmatched == true
-                  ? const Color.fromRGBO(255, 41, 41, 1)
-                  : const Color.fromRGBO(190, 32, 32, 1),
-              fontSize: 13,
-              fontFamily: 'ProximaNova',
-              fontWeight: FontWeight.w400,
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+            const SizedBox(
+              height: 22,
+            ),
+            Text(
+              'Unmatch',
+              style: TextStyle(
+                color: isUnmatched == true
+                    ? const Color.fromRGBO(255, 41, 41, 1)
+                    : const Color.fromRGBO(190, 32, 32, 1),
+                fontSize: 13,
+                fontFamily: 'ProximaNova',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ));
   }
 }
