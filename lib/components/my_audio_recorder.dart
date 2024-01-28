@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:async';
+
 import 'package:fe_interview_task_1/components/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,22 +18,49 @@ class MyAudioRecorder extends StatefulWidget {
 }
 
 class _MyAudioRecorderState extends State<MyAudioRecorder> {
-  bool areDeleteSubmitButtonEnabled = false;
-  String buttonState = 'start_record_button';
   bool isRecorded = false;
   bool isUnmatched = true;
   late String filePath = '';
   late AudioRecorder recorder = AudioRecorder();
   late AudioPlayer player = AudioPlayer();
+  // permissions:
   Permission microphonePermission = Permission.microphone;
   Permission mediaPermission = Permission.mediaLibrary;
   Permission storagePermission = Permission.storage;
+  // ui things:
+  bool areDeleteSubmitButtonEnabled = false;
+  String buttonState = 'start_record_button';
+  late StreamSubscription<Duration?> _durationSubscription;
+  String totalDuration = "0:00";
+  List<Amplitude> amplitudes = [];
 
   @override
   void initState() {
     super.initState();
     recorder = AudioRecorder();
     player = AudioPlayer();
+    initAudioPlayer();
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$twoDigitMinutes:$twoDigitSeconds';
+  }
+
+  Future<void> initAudioPlayer() async {
+    try {
+      _durationSubscription = player.durationStream.listen((duration) {
+        if (duration != null) {
+          setState(() {
+            totalDuration = _formatDuration(duration);
+          });
+        }
+      });
+    } catch (e) {
+      print("Error initializing audio player: $e");
+    }
   }
 
   @override
@@ -50,7 +79,18 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
       filePath = '$tempDir/temp_recording.m4a';
 
       await recorder.start(const RecordConfig(), path: filePath);
-      // await recorder.getAmplitude();
+
+      Timer.periodic(const Duration(milliseconds: 100), (timer) async {
+        if (await recorder.isPaused()) {
+          timer.cancel();
+        } else {
+          Amplitude amplitude = await recorder.getAmplitude();
+
+          setState(() {
+            amplitudes.add(amplitude);
+          });
+        }
+      });
     } catch (e) {
       print(e);
 
@@ -70,9 +110,9 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
 
   Future<void> playRecording() async {
     try {
+      await player.setLoopMode(LoopMode.one);
       await player.setFilePath(filePath);
       await player.play();
-      // await player.setFilePath(filePath, preload: false);
     } catch (e) {
       print('\n\nCould not play \n');
       print(e);
@@ -81,13 +121,14 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
   }
 
   Future<void> pauseRecording() async {
-    // await player.setAsset('lib/assets/music.mp3');
     await player.pause();
   }
 
   Future<void> deleteSubmitRecording() async {
     await player.stop();
-
+    setState(() {
+      totalDuration = '00:00';
+    });
     print('Deleted recording');
   }
 
@@ -201,8 +242,8 @@ if not playing : button state::isPausable=false
           ),
           Container(
               alignment: Alignment.center,
-              child: const Column(children: [
-                Padding(
+              child: Column(children: [
+                const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 55),
                     child: Text(
                       'What is your favorite time of the day?',
@@ -214,7 +255,7 @@ if not playing : button state::isPausable=false
                         fontFamily: 'ProximaNova',
                       ),
                     )),
-                Text(
+                const Text(
                   '“Mine is definitely the peace in the morning.”',
                   style: TextStyle(
                     fontSize: 13,
@@ -225,23 +266,19 @@ if not playing : button state::isPausable=false
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       top: 34,
                     ),
                     child: Text(
-                      '00:15 / 00:38',
+                      totalDuration,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 13,
                         color: Color.fromRGBO(245, 245, 245, 1),
                         fontWeight: FontWeight.w400,
                         fontFamily: 'ProximaNova',
                       ),
                     )),
-
-                // temp:
-
-                //
               ])),
           const Text(
             'Waveform here',
