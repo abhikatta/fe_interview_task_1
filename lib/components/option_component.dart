@@ -8,12 +8,11 @@ class MyOptionComponent extends StatelessWidget {
   final VoidCallback onPressed;
   final bool selected;
   const MyOptionComponent(
-      {Key? key,
+      {super.key,
       required this.choice,
       required this.option,
       required this.onPressed,
-      required this.selected})
-      : super(key: key);
+      required this.selected});
 
   @override
   Widget build(BuildContext context) {

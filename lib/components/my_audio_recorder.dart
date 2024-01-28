@@ -1,9 +1,15 @@
+// ignore_for_file: avoid_print
+
 import 'package:fe_interview_task_1/components/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:record/record.dart';
 
 class MyAudioRecorder extends StatefulWidget {
-  const MyAudioRecorder({Key? key}) : super(key: key);
+  const MyAudioRecorder({super.key});
 
   @override
   State<MyAudioRecorder> createState() => _MyAudioRecorderState();
@@ -14,6 +20,76 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
   String buttonState = 'start_record_button';
   bool isRecorded = false;
   bool isUnmatched = true;
+  late String filePath = '';
+  late AudioRecorder recorder = AudioRecorder();
+  late AudioPlayer player = AudioPlayer();
+  Permission microphonePermission = Permission.microphone;
+  Permission mediaPermission = Permission.mediaLibrary;
+  Permission storagePermission = Permission.storage;
+
+  @override
+  void initState() {
+    super.initState();
+    recorder = AudioRecorder();
+    player = AudioPlayer();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    recorder.dispose();
+    player.dispose();
+  }
+
+  Future<void> startRecording() async {
+    try {
+      await mediaPermission.request();
+      await microphonePermission.request();
+      await storagePermission.request();
+      String tempDir = (await getTemporaryDirectory()).path;
+      filePath = '$tempDir/temp_recording.m4a';
+
+      await recorder.start(const RecordConfig(), path: filePath);
+      // await recorder.getAmplitude();
+    } catch (e) {
+      print(e);
+
+      print(filePath);
+    }
+  }
+
+  Future<void> stopRecording() async {
+    if (buttonState == 'stop_record_button') {
+      try {
+        print(await recorder.stop());
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> playRecording() async {
+    try {
+      await player.setFilePath(filePath);
+      await player.play();
+      // await player.setFilePath(filePath, preload: false);
+    } catch (e) {
+      print('\n\nCould not play \n');
+      print(e);
+      print('\n\n error message above \n');
+    }
+  }
+
+  Future<void> pauseRecording() async {
+    // await player.setAsset('lib/assets/music.mp3');
+    await player.pause();
+  }
+
+  Future<void> deleteSubmitRecording() async {
+    await player.stop();
+
+    print('Deleted recording');
+  }
 
 /*
 all states: none, recording, recorded, playable, playing, 
@@ -35,13 +111,14 @@ current button :: isPlayable
 while playable : new button state:: isPausable=true
 if not playing : button state::isPausable=false
 
+*/
 
- */
   void submitDeletePressed() {
     setState(() {
       if (areDeleteSubmitButtonEnabled) {
         isRecorded = false;
         areDeleteSubmitButtonEnabled = false;
+        deleteSubmitRecording();
         if ((buttonState == 'play_button' || buttonState == 'pause_button') &&
             !isRecorded) {
           buttonState = 'start_record_button';
@@ -53,20 +130,23 @@ if not playing : button state::isPausable=false
   void toggleButton() {
     setState(() {
       if (buttonState == 'start_record_button') {
+        startRecording();
         buttonState = 'stop_record_button';
         isUnmatched = false;
       } else if (buttonState == 'stop_record_button') {
+        stopRecording();
         isRecorded = true;
         isUnmatched = true;
-
         areDeleteSubmitButtonEnabled = true;
         buttonState = 'play_button';
       } else if (buttonState == 'play_button' && isRecorded) {
         buttonState = 'pause_button';
         isUnmatched = true;
+        playRecording();
       } else if (buttonState == 'pause_button' && isRecorded) {
         buttonState = 'play_button';
         isUnmatched = true;
+        pauseRecording();
       } else if ((buttonState == 'play_button' ||
               buttonState == 'pause_button') &&
           !isRecorded) {
@@ -177,7 +257,7 @@ if not playing : button state::isPausable=false
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   submitDeletePressed();
                 },
                 child: Text(
