@@ -203,6 +203,7 @@ if not playing : button state::isPausable=false
 
   @override
   Widget build(BuildContext context) {
+    buttonState = buttonState;
     return Align(
       alignment: Alignment.bottomCenter,
       child: Column(
@@ -294,7 +295,9 @@ if not playing : button state::isPausable=false
                     height: (i!.max - i.current) * -1 / 4,
                     margin: const EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(191, 189, 255, 1),
+                      color: !isRecorded
+                          ? const Color.fromRGBO(54, 57, 62, 0.95)
+                          : const Color.fromRGBO(191, 189, 255, 1),
                       border: Border.all(
                         width: 2.76,
                         color: Colors.amber,
