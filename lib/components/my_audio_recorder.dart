@@ -290,24 +290,24 @@ if not playing : button state::isPausable=false
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 for (var i in amplitudes)
-                  Container(
-                    width: 2,
-                    height: (i!.max - i.current) * -1 / 4,
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: !isRecorded
-                          ? const Color.fromRGBO(54, 57, 62, 0.95)
-                          : const Color.fromRGBO(191, 189, 255, 1),
-                      border: Border.all(
-                        width: 2.76,
-                        color: Colors.amber,
+                  Row(
+                    children: [
+                      Container(
+                        width: 2,
+                        height: (i!.max - i.current) * -1 / 4,
+                        margin: const EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(
+                          color: !isRecorded
+                              ? const Color.fromRGBO(54, 57, 62, 0.95)
+                              : const Color.fromRGBO(191, 189, 255, 1),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
+                      const SizedBox(
+                        width: 1,
+                      ),
+                    ],
                   ),
-                const SizedBox(
-                  width: 4,
-                ),
               ]),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
