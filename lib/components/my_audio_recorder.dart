@@ -30,9 +30,9 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
   // ui things:
   bool areDeleteSubmitButtonEnabled = false;
   String buttonState = 'start_record_button';
-  late StreamSubscription<Duration?> _durationSubscription;
+  late StreamSubscription<Duration?> durationSubscription;
   String totalDuration = "0:00";
-  List<Amplitude> amplitudes = [];
+  List<Amplitude?> amplitudes = [];
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
 
   Future<void> initAudioPlayer() async {
     try {
-      _durationSubscription = player.durationStream.listen((duration) {
+      durationSubscription = player.durationStream.listen((duration) {
         if (duration != null) {
           setState(() {
             totalDuration = _formatDuration(duration);
@@ -80,15 +80,15 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
 
       await recorder.start(const RecordConfig(), path: filePath);
 
-      Timer.periodic(const Duration(milliseconds: 100), (timer) async {
-        if (await recorder.isPaused()) {
-          timer.cancel();
-        } else {
+      Timer.periodic(const Duration(milliseconds: 450), (timer) async {
+        if (await recorder.isRecording()) {
           Amplitude amplitude = await recorder.getAmplitude();
 
           setState(() {
             amplitudes.add(amplitude);
           });
+        } else {
+          timer.cancel();
         }
       });
     } catch (e) {
@@ -101,7 +101,7 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
   Future<void> stopRecording() async {
     if (buttonState == 'stop_record_button') {
       try {
-        print(await recorder.stop());
+        await recorder.stop();
       } catch (e) {
         print(e);
       }
@@ -126,6 +126,7 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
 
   Future<void> deleteSubmitRecording() async {
     await player.stop();
+    await recorder.stop();
     setState(() {
       totalDuration = '00:00';
     });
@@ -160,6 +161,9 @@ if not playing : button state::isPausable=false
         isRecorded = false;
         areDeleteSubmitButtonEnabled = false;
         deleteSubmitRecording();
+        setState(() {
+          amplitudes = [];
+        });
         if ((buttonState == 'play_button' || buttonState == 'pause_button') &&
             !isRecorded) {
           buttonState = 'start_record_button';
@@ -280,16 +284,28 @@ if not playing : button state::isPausable=false
                       ),
                     )),
               ])),
-          const Text(
-            'Waveform here',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24,
-              color: Color(0xFFF5F5F5),
-              fontWeight: FontWeight.w700,
-              fontFamily: 'ProximaNova',
-            ),
-          ),
+          Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (var i in amplitudes)
+                  Container(
+                    width: 2,
+                    height: (i!.max - i.current) * -1 / 4,
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: const Color.fromRGBO(191, 189, 255, 1),
+                      border: Border.all(
+                        width: 2.76,
+                        color: Colors.amber,
+                      ),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                const SizedBox(
+                  width: 4,
+                ),
+              ]),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
