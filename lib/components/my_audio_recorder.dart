@@ -86,7 +86,7 @@ class _MyAudioRecorderState extends State<MyAudioRecorder> {
 
       await recorder.start(const RecordConfig(), path: filePath);
 
-      Timer.periodic(const Duration(milliseconds: 450), (timer) async {
+      Timer.periodic(const Duration(milliseconds: 400), (timer) async {
         if (await recorder.isRecording()) {
           Amplitude amplitude = await recorder.getAmplitude();
           print("\n amplitude rn is $amplitude");

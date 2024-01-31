@@ -25,7 +25,7 @@ class MyRecorder extends StatelessWidget {
   double calculateHeight(Amplitude? i) {
     var max = i!.max;
     var current = i.current;
-    return (max / current).toDouble().abs();
+    return (max / current * 1.7).toDouble().abs();
   }
 
   @override
