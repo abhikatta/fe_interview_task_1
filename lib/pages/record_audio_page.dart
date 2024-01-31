@@ -1,3 +1,4 @@
+import 'package:fe_interview_task_1/assets/my_icons.dart';
 import 'package:fe_interview_task_1/components/my_audio_recorder.dart';
 import 'package:fe_interview_task_1/components/my_status_bar.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class AudioRecordingPage extends StatelessWidget {
             width: 476,
             height: 605,
             child: Image.asset(
-              'lib/assets/human.png',
+              myIcons[MyIcon.human]!,
               fit: BoxFit.fill,
             ),
           ),
@@ -35,7 +36,7 @@ class AudioRecordingPage extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: SvgPicture.asset(
-              'lib/assets/record_fade_over.svg',
+              myIcons[MyIcon.recordFadeOver]!,
               fit: BoxFit.cover,
             ),
           ),

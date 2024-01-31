@@ -1,3 +1,4 @@
+import 'package:fe_interview_task_1/assets/my_icons.dart';
 import 'package:fe_interview_task_1/components/avatar.dart';
 import 'package:fe_interview_task_1/components/option_component.dart';
 import 'package:fe_interview_task_1/pages/record_audio_page.dart';
@@ -28,7 +29,7 @@ class MyBottomSection extends StatelessWidget {
           const SizedBox(
             width: 27,
           ),
-          const MyAvatar(imagePath: 'lib/assets/human.png'),
+          MyAvatar(imagePath: myIcons[MyIcon.human]!),
           const SizedBox(
             width: 4,
           ),
@@ -145,12 +146,12 @@ class MyBottomSection extends StatelessWidget {
                                 builder: (context) =>
                                     const AudioRecordingPage()));
                       },
-                      child: SvgPicture.asset('lib/assets/mike.svg'),
+                      child: SvgPicture.asset(myIcons[MyIcon.mike]!),
                     ),
                     const SizedBox(width: 6),
                     GestureDetector(
                       onTap: () {},
-                      child: SvgPicture.asset('lib/assets/arrow.svg'),
+                      child: SvgPicture.asset(myIcons[MyIcon.arrow]!),
                     ),
                   ],
                 )

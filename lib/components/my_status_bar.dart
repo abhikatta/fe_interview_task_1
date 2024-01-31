@@ -1,3 +1,4 @@
+import 'package:fe_interview_task_1/assets/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -52,7 +53,7 @@ class MyStatusBar extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               child: SvgPicture.asset(
-                'lib/assets/navigation_go_back.svg',
+                myIcons[MyIcon.navigationGoBack]!,
                 width: 44,
                 height: 44,
               ),
@@ -61,7 +62,7 @@ class MyStatusBar extends StatelessWidget {
               GestureDetector(
                 onTap: () {},
                 child: SvgPicture.asset(
-                  'lib/assets/more_options.svg',
+                  myIcons[MyIcon.moreOptions]!,
                   width: 26,
                   height: 26,
                 ),

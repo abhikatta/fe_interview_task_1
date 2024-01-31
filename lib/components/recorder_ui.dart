@@ -1,3 +1,4 @@
+import 'package:fe_interview_task_1/assets/my_icons.dart';
 import 'package:fe_interview_task_1/components/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -39,7 +40,7 @@ class MyRecorder extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(999),
               ),
-              child: const MyAvatar(imagePath: 'lib/assets/human.png'),
+              child: MyAvatar(imagePath: myIcons[MyIcon.human]!),
             ),
             Container(
               decoration: BoxDecoration(
@@ -179,7 +180,7 @@ class MyRecorder extends StatelessWidget {
                   },
                   // the enum state IS used as the button name hence the following:
                   icon: SvgPicture.asset(
-                      'lib/assets/${buttonState.name.toString()}.svg'),
+                      'lib/assets/icons/${buttonState.name.toString()}.svg'),
                 ),
                 const SizedBox(width: 36),
                 TextButton(

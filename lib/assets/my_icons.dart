@@ -5,15 +5,19 @@ enum MyIcon {
   pokerCards,
   clock,
   dropdownArrow,
+  moreOptions,
   pause,
   play,
   stopRecord,
   startRecord,
   navigationGoBack,
+  mike,
   person,
+  human,
   user,
   background,
-  fade
+  fade,
+  recordFadeOver
 }
 
 const Map<MyIcon, String> myIcons = {
@@ -23,13 +27,17 @@ const Map<MyIcon, String> myIcons = {
   MyIcon.clock: 'lib/assets/icons/clock.svg',
   MyIcon.pokerCards: 'lib/assets/icons/poker_cards.svg',
   MyIcon.dropdownArrow: 'lib/assets/icons/dropdown_arrow.svg',
+  MyIcon.moreOptions: 'lib/assets/icons/more_options.svg',
   MyIcon.pause: 'lib/assets/icons/pause.svg',
   MyIcon.play: 'lib/assets/icons/play.svg',
   MyIcon.stopRecord: 'lib/assets/icons/stopRecord.svg',
   MyIcon.startRecord: 'lib/assets/icons/startRecord.svg',
   MyIcon.navigationGoBack: 'lib/assets/icons/navigation_go_back.svg',
+  MyIcon.mike: 'lib/assets/icons/mike.svg',
   MyIcon.person: 'lib/assets/others/person.svg',
   MyIcon.user: 'lib/assets/others/user.svg',
+  MyIcon.human: 'lib/assets/others/human.png',
   MyIcon.background: 'lib/assets/others/background.png',
-  MyIcon.fade: 'lib/assets/pthers/fade.svg'
+  MyIcon.fade: 'lib/assets/others/fade.svg',
+  MyIcon.recordFadeOver: 'lib/assets/others/record_fade_over.svg'
 };
