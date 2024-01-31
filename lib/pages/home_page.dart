@@ -1,3 +1,4 @@
+import 'package:fe_interview_task_1/assets/my_icons.dart';
 import 'package:fe_interview_task_1/components/bottom_nav_bar.dart';
 import 'package:fe_interview_task_1/components/home_bottom_section.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  // static
   final String time = '22h 00m';
   final num peopleCount = 103;
 
@@ -25,11 +27,11 @@ class HomePage extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'lib/assets/background.png',
+            myIcons[MyIcon.background]!,
             fit: BoxFit.cover,
           ),
           SvgPicture.asset(
-            'lib/assets/fade.svg',
+            myIcons[MyIcon.fade]!,
             fit: BoxFit.cover,
           ),
           Center(
@@ -64,7 +66,7 @@ class HomePage extends StatelessWidget {
                       ],
                     )),
                 SvgPicture.asset(
-                  'lib/assets/dropdown_arrow.svg',
+                  myIcons[MyIcon.dropdownArrow]!,
                   width: 40.0,
                   height: 40.0,
                 ),
@@ -74,7 +76,7 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
-                  'lib/assets/clock.svg',
+                  myIcons[MyIcon.clock]!,
                   width: 13.0,
                   height: 15.0,
                 ),
@@ -89,7 +91,7 @@ class HomePage extends StatelessWidget {
                 ),
                 const SizedBox(width: 9.73),
                 SvgPicture.asset(
-                  'lib/assets/person.svg',
+                  myIcons[MyIcon.person]!,
                   width: 10.0,
                   height: 13.0,
                 ),

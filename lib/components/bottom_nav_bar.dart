@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers
 
+import 'package:fe_interview_task_1/assets/my_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,7 +16,7 @@ class MyBottomNavBar extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           child: SvgPicture.asset(
-            'lib/assets/poker_cards.svg',
+            myIcons[MyIcon.pokerCards]!,
             width: 28,
             height: 28,
           ),
@@ -25,7 +26,7 @@ class MyBottomNavBar extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               child: SvgPicture.asset(
-                'lib/assets/bonfire.svg',
+                myIcons[MyIcon.bonfire]!,
                 width: 28,
                 height: 28,
               ),
@@ -57,7 +58,7 @@ class MyBottomNavBar extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               child: SvgPicture.asset(
-                'lib/assets/chat.svg',
+                myIcons[MyIcon.chat]!,
                 width: 28,
                 height: 28,
               ),
@@ -91,7 +92,7 @@ class MyBottomNavBar extends StatelessWidget {
         Container(
           // padding: const EdgeInsets.all(8),
           child: SvgPicture.asset(
-            'lib/assets/user.svg',
+            myIcons[MyIcon.user]!,
             width: 44,
             height: 44,
           ),
