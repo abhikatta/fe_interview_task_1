@@ -22,6 +22,11 @@ class MyRecorder extends StatelessWidget {
     required this.toggleButton,
     required this.amplitudes,
   });
+  double calculateHeight(Amplitude? i) {
+    var max = i!.max;
+    var current = i.current;
+    return (max / current).toDouble().abs();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +144,7 @@ class MyRecorder extends StatelessWidget {
                             for (var i in amplitudes)
                               Container(
                                 width: 2,
-                                height: (i!.max - i.current) * -1 / 4,
+                                height: calculateHeight(i),
                                 margin:
                                     const EdgeInsets.only(bottom: 10, right: 2),
                                 decoration: BoxDecoration(
